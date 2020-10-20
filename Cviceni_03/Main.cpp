@@ -44,6 +44,8 @@ int main(int argc, char** argv)
 	cout << "(4) Id hledaneho je:" << game->FindMovingObjects(0, 0, 10, 0, 110)[1]->GetID() << "\n";
 	cout << "(5) Id hledaneho je:" << game->FindMovingObjects(0, 0, 10, 0, 110)[2]->GetID() << "\n";
 
+	delete game;
+	cout << "Smazano. \n";
 
 	return 0;
 }

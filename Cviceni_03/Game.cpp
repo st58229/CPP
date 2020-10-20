@@ -9,6 +9,15 @@ Game::Game(int numberOfMaxEntites)
 	this->maxSize = numberOfMaxEntites;
 }
 
+Game::~Game()
+{
+	for (size_t i = 0; i < counter; i++)
+	{
+		delete objects[i];
+	}
+	delete[] objects;
+}
+
 void Game::InsertObject(Object* o) 
 {
 	if (this->counter < this->maxSize)
@@ -17,6 +26,7 @@ void Game::InsertObject(Object* o)
 		this->counter++;
 	}
 }
+
 int* Game::FindStaticObjectsIDs(double xMin, double xMax, double yMin, double yMax) 
 {	
 	int* IDs = new int[counter];
