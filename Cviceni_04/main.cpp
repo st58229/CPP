@@ -1,5 +1,7 @@
 #include<iostream>
 #include "Time.h"
+#include "TimeOrder.h"
+
 
 using namespace std;
 int main() {
@@ -30,12 +32,14 @@ int main() {
 
 	cout << "============\n";
 
-	tm1->Order(field, size);
+	TimeOrder::Order(field, size);
 
 	for (size_t i = 0; i < size; i++)
 	{
 		cout << field[i]->toString() << endl;
 	}
+
+	delete[] field;
 
 	system("pause");
 	return 0;
