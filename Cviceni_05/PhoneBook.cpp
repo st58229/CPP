@@ -43,7 +43,7 @@ Model::Phonebook::Phonebook() {}
 
 Model::Phonebook::~Phonebook() 
 {
-    listElement* newElement = new listElement{};
+    listElement* newElement = start;
 
     while (newElement != nullptr) 
     {
