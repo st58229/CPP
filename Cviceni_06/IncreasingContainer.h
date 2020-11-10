@@ -47,7 +47,7 @@ bool IncreasingContainer<T, startSize, increase>::isNotFull() const
 template <typename T, int startSize, int increase>
 void IncreasingContainer<T, startSize, increase>::increase()
 {
-	int newSize = _size * 2;
+	int newSize = _size * increase;
 	T* newField = new T[newSize];
 
 	for (int i = 0; i < _size; i++) {
