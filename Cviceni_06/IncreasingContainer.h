@@ -78,14 +78,14 @@ void IncreasingContainer<T, startSize, increase>::add(const T& o)
 template <typename T, int startSize, int increase>
 T& IncreasingContainer<T, startSize, increase>::operator[](int index)
 {
-	if (index >= _items) throw 0;
+	if (index >= _items) throw std::invalid_argument("Error - operator");
 	return _field[index];
 }
 
 template <typename T, int startSize, int increase>
 T IncreasingContainer<T, startSize, increase>::operator[](int index) const
 {
-	if (index > _items - 1) throw 0;	
+	if (index > _items - 1) throw std::invalid_argument("Error - operator");	
 	return _field[index];
 }
 
@@ -96,7 +96,7 @@ template <typename T, int startSize, int increase>
 void IncreasingContainer<T, startSize, increase>::add(int index, const T& o)
 {
 	if (!isNotFull()) increase();
-	if (index > _items) throw 0;
+	if (index > _items) throw std::invalid_argument("Error - add");
 	if (index == _items)
 	{
 		add(o);
@@ -118,7 +118,7 @@ void IncreasingContainer<T, startSize, increase>::add(int index, const T& o)
 template <typename T, int startSize, int increase>
 void IncreasingContainer<T, startSize, increase>::remove(int index)
 {
-	if (index > _items - 1) throw 0;
+	if (index > _items - 1) std::invalid_argument("Error - remove");
 	else if (index == _items - 1) _items--;
 	else
 	{		
