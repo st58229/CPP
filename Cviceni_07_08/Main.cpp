@@ -89,7 +89,6 @@ void loadBinaryFile()
 		}		
 	}
 	else 	cerr << "File load error!" << endl;
-	
 
 	fl.close();
 }
