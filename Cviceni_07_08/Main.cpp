@@ -88,9 +88,8 @@ void loadBinaryFile()
 			cout << field[i] << endl;
 		}		
 	}
-	else {
-		cerr << "File load error!" << endl;
-	}
+	else 	cerr << "File load error!" << endl;
+	
 
 	fl.close();
 }
