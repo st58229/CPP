@@ -7,7 +7,7 @@ class cui
 
 private:
 
-	ArrayValue listStudents;	
+	ArrayValue* listStudents = new ArrayValue{};
 	int selected;
 
 public:
@@ -16,7 +16,7 @@ public:
 	~cui();
 
 	void show();
-	void showDetail(int index); //Asi, podle neèeho hledat v poli studenty
+	void showDetail(int index); 
 
 	void add(); //Vyvolá konzol dialog, vytvoøí srtudenta, vloží do pole
 

@@ -1,5 +1,14 @@
 #include "api.h"
 
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
+#ifdef _DEBUG
+#define DEBUG_CLIENTBLOCK new( _CLIENT_BLOCK, __FILE__, __LINE__)
+#define new DEBUG_CLIENTBLOCK
+#endif
+
 std::string NullValue::serialize() const
 {
 	return "null";
@@ -102,6 +111,11 @@ KeyValuePair::KeyValuePair(std::string key, Value* value)
 	_key = key;
 }
 
+KeyValuePair::~KeyValuePair() 
+{
+	
+}
+
 std::string KeyValuePair::getKey() const
 {
 	return _key;
@@ -121,7 +135,10 @@ ArrayValue::ArrayValue()
 
 ArrayValue::~ArrayValue()
 {
-
+	for (int i = 0; i < arrayValues.getSize(); i++)
+	{		
+		delete arrayValues[i];
+	}
 }
 
 void ArrayValue::append(Value* element)
@@ -141,6 +158,7 @@ int ArrayValue::getSize()
 
 void ArrayValue::remove(int index)
 {
+	delete arrayValues[index];
 	arrayValues.remove(index);
 }
 
@@ -169,7 +187,10 @@ ObjectValue::ObjectValue()
 
 ObjectValue::~ObjectValue()
 {
-	
+	for (int i = 0; i < objectValues.getSize(); i++)
+	{				
+		delete objectValues[i].getValue();	
+	}	
 }
 
 void ObjectValue::append(const KeyValuePair& pair)
@@ -189,6 +210,7 @@ void ObjectValue::append(const KeyValuePair& pair)
 
  void ObjectValue::remove(int index)
  {
+	 delete objectValues[index].getValue();
 	 objectValues.remove(index);
  }
 
@@ -262,6 +284,8 @@ Value* createJsonObject(const std::string& string, int& pos)
 		filtrWhiteSpaces(string, pos);
 
 		ov->append(KeyValuePair{ key->get(), val });	// Uložení do objektu
+
+		delete key;
 
 		if (string[pos] != ',')
 			{			

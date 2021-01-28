@@ -3,6 +3,15 @@
 #include <string>
 #include "platform.h"
 
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
+#ifdef _DEBUG
+#define DEBUG_CLIENTBLOCK new( _CLIENT_BLOCK, __FILE__, __LINE__)
+#define new DEBUG_CLIENTBLOCK
+#endif
+
 // - šablona s parametrem datového typu uložených hodnot
 // - není povoleno užití STL kontejnerù ani jiných knihoven pro ukládání dat
 // - realizace musí využívat dynamicky alokované pole, spojový seznam nebo jinou vhodnou Vámi implementovanou ADS 
@@ -149,6 +158,7 @@ class DLL_SPEC Value
 public:
 	// serializuje hodnotu do podoby JSON reprezentace
 	virtual std::string serialize() const = 0;
+	virtual ~Value() {};
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -207,7 +217,7 @@ private:
 	std::string value;
 public:
 	StringValue();
-	StringValue(std::string value);
+	StringValue(std::string value);	
 
 	void escapeChar();
 	// - vrací øetìzcovou hodnotu
@@ -227,6 +237,7 @@ private:
 public:
 	KeyValuePair();
 	KeyValuePair(std::string key, Value* value);
+	~KeyValuePair();
 
 	// - vrátí klíè
 	std::string getKey() const;

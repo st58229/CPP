@@ -3,6 +3,15 @@
 #include <fstream>
 #include <iostream>
 
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
+#ifdef _DEBUG
+#define DEBUG_CLIENTBLOCK new( _CLIENT_BLOCK, __FILE__, __LINE__)
+#define new DEBUG_CLIENTBLOCK
+#endif
+
 cui::cui()
 {
 
@@ -10,14 +19,14 @@ cui::cui()
 
 cui::~cui()
 {
-    
+    delete listStudents;   
 }
 
 void cui::show()
 {
-    for (int i = 0; i < listStudents.getSize(); i++)
+    for (int i = 0; i < listStudents->getSize(); i++)
     {      
-       ObjectValue* item = dynamic_cast<ObjectValue*>(listStudents.get(i));
+       ObjectValue* item = dynamic_cast<ObjectValue*>(listStudents->get(i));
 
        std::string out;
        out.append(std::to_string(i)); //Id v poli pro mazání a tak
@@ -60,7 +69,7 @@ void cui::remove()
     int index;
     std::cin >> index;
 
-    listStudents.remove(index);
+    listStudents->remove(index);
     std::cout << "Removed. " << std::endl;
 }
 
@@ -80,7 +89,7 @@ void cui::update()
     int index;
     std::cin >> index;
 
-    s->createStudent(dynamic_cast<ObjectValue*>(listStudents.get(index)));
+    s->createStudent(dynamic_cast<ObjectValue*>(listStudents->get(index)));
    
     std::cout << "Want to update Name? (y - yes):" << std::endl;
     std::cin >> choice;
@@ -135,7 +144,7 @@ void cui::update()
     std::cout << "Want to update Subject? (y - yes):" << std::endl;
     std::cin >> choice;
     if (choice == "y")
-    {
+    {        
         ArrayValue* subjects = new ArrayValue{};
         std::string input;
         while (input != "e") {
@@ -143,7 +152,7 @@ void cui::update()
             std::cin >> input;
             if (input != "e")  subjects->append(new StringValue(input));
         }
-        s->setPredmety(subjects);
+        s->updatePredmety(subjects);
     }
 
     std::cout << "Want to update Study? (y - yes):" << std::endl;
@@ -169,10 +178,12 @@ void cui::update()
         std::cout << "Study year: ";
         std::cin >> studyYear;
         s->setRocnik(studyYear);
-    }
-
-    listStudents.remove(index);
-    listStudents.append(s->toValue());
+    }    
+        
+    listStudents->append(s->toValue()); 
+    listStudents->remove(index);
+    delete s;
+   
 
     std::cout << "Updated. " << std::endl;
 
@@ -204,9 +215,7 @@ void cui::readFile()
     
     fl.open("out.txt");
 
-    std::string value;
-
-    ArrayValue* fromFile;
+    std::string value;    
 
     if (fl.fail())
     {
@@ -217,12 +226,9 @@ void cui::readFile()
 
     fl >> value;
 
-    fromFile = dynamic_cast<ArrayValue*> (JSON::deserialize(value));      
-    
-    for (int i = 0; i < fromFile->getSize(); i++)
-    {
-        listStudents.append(dynamic_cast<ObjectValue*>(fromFile->get(i)));
-    }
+    delete listStudents;
+
+    listStudents = dynamic_cast<ArrayValue*> (JSON::deserialize(value));
    
     fl.close();
 
@@ -230,6 +236,7 @@ void cui::readFile()
 }
 
 void cui::add() {
+ 
     Student* s = new Student();
     std::string firstname;
     std::cout << "Firstname: ";
@@ -281,7 +288,11 @@ void cui::add() {
     std::cin >> studyYear;
     s->setRocnik(studyYear);
 
-    listStudents.append(s->toValue());
+    listStudents->append(s->toValue());
+
+    delete s;
+    
+
     std::cout << "Added. " << std::endl;
 }
 
@@ -320,7 +331,7 @@ void cui::callChoice()
             selected = -1;
             break;
         case 5:            
-            printFile(listStudents.serialize());
+            printFile(listStudents->serialize());
             selected = -1;
             break;
         case 6: 
